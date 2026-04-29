@@ -225,6 +225,10 @@ export const SettingsForm = () => {
 
   const maxGuideLength = Number(formState.cardWidth) / 2;
 
+  const hasFrontPages = formState.printMode !== "backs-only";
+  const hasBackPages =
+    formState.printMode === "duplex" || formState.printMode === "backs-only";
+
   return (
     <Tabs.Root asChild defaultValue="basic">
       <form>
@@ -747,108 +751,116 @@ export const SettingsForm = () => {
               </Field.Root>
             </div>
           </Fieldset.Root>
-          <Fieldset.Root>
-            <Fieldset.Legend className={css({ marginBottom: "2" })}>
-              Front Page Alignment
-            </Fieldset.Legend>
-            <div className={hstack({ width: "full", gap: "2" })}>
-              <Field.Root
-                invalid={formErrors.offsetX.length > 0}
-                className={css({ flex: 1 })}
-              >
-                <NumberInput
-                  step={0.1}
-                  value={formState.offsetX}
-                  onValueChange={buildNumberInputChangeHandler("offsetX")}
+          {hasFrontPages && (
+            <Fieldset.Root>
+              <Fieldset.Legend className={css({ marginBottom: "2" })}>
+                {hasBackPages ? "Front Page Alignment" : "Page Alignment"}
+              </Fieldset.Legend>
+              <div className={hstack({ width: "full", gap: "2" })}>
+                <Field.Root
+                  invalid={formErrors.offsetX.length > 0}
+                  className={css({ flex: 1 })}
                 >
-                  X Offset (mm)
-                </NumberInput>
-                {formErrors.offsetX.map((issue, i) => (
-                  <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-                ))}
-              </Field.Root>
-              <Field.Root
-                invalid={formErrors.offsetY.length > 0}
-                className={css({ flex: 1 })}
-              >
-                <NumberInput
-                  step={0.1}
-                  value={formState.offsetY}
-                  onValueChange={buildNumberInputChangeHandler("offsetY")}
+                  <NumberInput
+                    step={0.1}
+                    value={formState.offsetX}
+                    onValueChange={buildNumberInputChangeHandler("offsetX")}
+                  >
+                    X Offset (mm)
+                  </NumberInput>
+                  {formErrors.offsetX.map((issue, i) => (
+                    <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+                  ))}
+                </Field.Root>
+                <Field.Root
+                  invalid={formErrors.offsetY.length > 0}
+                  className={css({ flex: 1 })}
                 >
-                  Y Offset (mm)
-                </NumberInput>
-                {formErrors.offsetY.map((issue, i) => (
-                  <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-                ))}
-              </Field.Root>
-            </div>
-          </Fieldset.Root>
-          <Field.Root invalid={formErrors.pageRotation.length > 0}>
-            <NumberInput
-              step={0.1}
-              min={-180}
-              max={180}
-              value={formState.pageRotation}
-              onValueChange={buildNumberInputChangeHandler("pageRotation")}
-            >
-              Rotation (°)
-            </NumberInput>
-            {formErrors.pageRotation.map((issue, i) => (
-              <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-            ))}
-          </Field.Root>
-          <Fieldset.Root>
-            <Fieldset.Legend className={css({ marginBottom: "2" })}>
-              Back Page Offset
-            </Fieldset.Legend>
-            <div className={hstack({ width: "full", gap: "2" })}>
-              <Field.Root
-                invalid={formErrors.backOffsetX.length > 0}
-                className={css({ flex: 1 })}
+                  <NumberInput
+                    step={0.1}
+                    value={formState.offsetY}
+                    onValueChange={buildNumberInputChangeHandler("offsetY")}
+                  >
+                    Y Offset (mm)
+                  </NumberInput>
+                  {formErrors.offsetY.map((issue, i) => (
+                    <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+                  ))}
+                </Field.Root>
+              </div>
+            </Fieldset.Root>
+          )}
+          {hasFrontPages && (
+            <Field.Root invalid={formErrors.pageRotation.length > 0}>
+              <NumberInput
+                step={0.1}
+                min={-180}
+                max={180}
+                value={formState.pageRotation}
+                onValueChange={buildNumberInputChangeHandler("pageRotation")}
               >
-                <NumberInput
-                  step={0.1}
-                  value={formState.backOffsetX}
-                  onValueChange={buildNumberInputChangeHandler("backOffsetX")}
+                Rotation (°)
+              </NumberInput>
+              {formErrors.pageRotation.map((issue, i) => (
+                <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+              ))}
+            </Field.Root>
+          )}
+          {hasBackPages && (
+            <Fieldset.Root>
+              <Fieldset.Legend className={css({ marginBottom: "2" })}>
+                {hasFrontPages ? "Back Page Alignment" : "Page Alignment"}
+              </Fieldset.Legend>
+              <div className={hstack({ width: "full", gap: "2" })}>
+                <Field.Root
+                  invalid={formErrors.backOffsetX.length > 0}
+                  className={css({ flex: 1 })}
                 >
-                  X Offset (mm)
-                </NumberInput>
-                {formErrors.backOffsetX.map((issue, i) => (
-                  <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-                ))}
-              </Field.Root>
-              <Field.Root
-                invalid={formErrors.backOffsetY.length > 0}
-                className={css({ flex: 1 })}
+                  <NumberInput
+                    step={0.1}
+                    value={formState.backOffsetX}
+                    onValueChange={buildNumberInputChangeHandler("backOffsetX")}
+                  >
+                    X Offset (mm)
+                  </NumberInput>
+                  {formErrors.backOffsetX.map((issue, i) => (
+                    <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+                  ))}
+                </Field.Root>
+                <Field.Root
+                  invalid={formErrors.backOffsetY.length > 0}
+                  className={css({ flex: 1 })}
+                >
+                  <NumberInput
+                    step={0.1}
+                    value={formState.backOffsetY}
+                    onValueChange={buildNumberInputChangeHandler("backOffsetY")}
+                  >
+                    Y Offset (mm)
+                  </NumberInput>
+                  {formErrors.backOffsetY.map((issue, i) => (
+                    <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+                  ))}
+                </Field.Root>
+              </div>
+            </Fieldset.Root>
+          )}
+          {hasBackPages && (
+            <Field.Root invalid={formErrors.backPageRotation.length > 0}>
+              <NumberInput
+                step={0.1}
+                min={-180}
+                max={180}
+                value={formState.backPageRotation}
+                onValueChange={buildNumberInputChangeHandler("backPageRotation")}
               >
-                <NumberInput
-                  step={0.1}
-                  value={formState.backOffsetY}
-                  onValueChange={buildNumberInputChangeHandler("backOffsetY")}
-                >
-                  Y Offset (mm)
-                </NumberInput>
-                {formErrors.backOffsetY.map((issue, i) => (
-                  <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-                ))}
-              </Field.Root>
-            </div>
-          </Fieldset.Root>
-          <Field.Root invalid={formErrors.backPageRotation.length > 0}>
-            <NumberInput
-              step={0.1}
-              min={-180}
-              max={180}
-              value={formState.backPageRotation}
-              onValueChange={buildNumberInputChangeHandler("backPageRotation")}
-            >
-              Rotation (°)
-            </NumberInput>
-            {formErrors.backPageRotation.map((issue, i) => (
-              <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-            ))}
-          </Field.Root>
+                {hasFrontPages ? "Back Page Rotation (°)" : "Rotation (°)"}
+              </NumberInput>
+              {formErrors.backPageRotation.map((issue, i) => (
+                <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+              ))}
+            </Field.Root>
+          )}
           <Field.Root invalid={formErrors.guideLength.length > 0}>
             <NumberInput
               min={0}
@@ -885,19 +897,21 @@ export const SettingsForm = () => {
               <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
             ))}
           </Field.Root>
-          <Field.Root invalid={formErrors.backPagesShowGuides.length > 0}>
-            <Field.Label>Show Guides on Back Pages</Field.Label>
-            <Checkbox
-              size="lg"
-              checked={formState.backPagesShowGuides}
-              onCheckedChange={buildCheckboxChangeHandler(
-                "backPagesShowGuides",
-              )}
-            />
-            {formErrors.backPagesShowGuides.map((issue, i) => (
-              <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
-            ))}
-          </Field.Root>
+          {hasBackPages && (
+            <Field.Root invalid={formErrors.backPagesShowGuides.length > 0}>
+              <Field.Label>Show Guides on Back Pages</Field.Label>
+              <Checkbox
+                size="lg"
+                checked={formState.backPagesShowGuides}
+                onCheckedChange={buildCheckboxChangeHandler(
+                  "backPagesShowGuides",
+                )}
+              />
+              {formErrors.backPagesShowGuides.map((issue, i) => (
+                <Field.ErrorText key={i}>{issue.message}</Field.ErrorText>
+              ))}
+            </Field.Root>
+          )}
         </Tabs.Content>
         <Tabs.Content
           value="experimental"
